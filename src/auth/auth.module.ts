@@ -11,7 +11,7 @@ import { env } from 'src/config';
     PrismaModule,
     JwtModule.register({
       secret: env.jwtSecret,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: env.expiresIn },
     }),
   ],
   controllers: [AuthController],

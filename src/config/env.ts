@@ -6,6 +6,7 @@ interface EnvVars {
     DATABASE_URL: string;
     API_PREFIX: string;    
     JWT_SECRET: string;
+    EXPIRES_IN: number;
 }
 
 const envSchema = joi.object({
@@ -13,6 +14,7 @@ const envSchema = joi.object({
     DATABASE_URL: joi.string().required(),
     API_PREFIX: joi.string().default('api'),
     JWT_SECRET: joi.string().required(),
+    EXPIRES_IN: joi.number().default(3600),
 }).unknown(true);
 
 const { error, value } = envSchema.validate(process.env);
@@ -28,4 +30,5 @@ export const env = {
     databaseUrl: envVars.DATABASE_URL,
     apiPrefix: envVars.API_PREFIX,
     jwtSecret: envVars.JWT_SECRET,
+    expiresIn: envVars.EXPIRES_IN,
 };
