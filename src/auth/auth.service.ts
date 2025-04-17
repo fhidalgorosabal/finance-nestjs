@@ -74,7 +74,7 @@ export class AuthService {
     }
   }
 
-  refreshToken(user: any) {
+  refresh(user: any) {
     try {
       const payload = { sub: user.id, email: user.email };
   
@@ -108,6 +108,12 @@ export class AuthService {
     }
   }
 
+  logout(token: string) {
+    if (token !=='') this.blacklistToken(token);
+    
+    return responseData([], 'Se ha cerrado la sesión correctamente.');
+  }
+
   private async validateUser(email: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { email } });    
 
@@ -125,4 +131,17 @@ export class AuthService {
       expires_in: env.expiresIn,
     };
   }
+
+  private async blacklistToken(token: string) {
+    const decoded: any = this.jwtService.decode(token);
+    const expiredAt = new Date(decoded.exp * 1000);
+  
+    await this.prisma.blacklistedToken.create({
+      data: {
+        token,
+        expiredAt,
+      },
+    });
+  }
+  
 }

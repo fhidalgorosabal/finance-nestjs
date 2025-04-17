@@ -5,11 +5,13 @@ import {
   Get,
   UseGuards,
   Request,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { RegisterDto } from './dto/register.dto';
-import { responseData } from 'src/common/utils/response.util';
+import { Request as ExpressRequest } from 'express';
+
 
 @Controller('auth')
 export class AuthController {
@@ -21,8 +23,16 @@ export class AuthController {
   }
 
   @Post('login')
+  @HttpCode(200)
   async login(@Body() body: { email: string; password: string }) {
     return this.authService.login(body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('refresh')
+  @HttpCode(200)
+  async refresh(@Request() req) {
+    return this.authService.refresh(req.user);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -33,13 +43,12 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  logout() {
-    return responseData([], 'Se ha cerrado la sesión correctamente.');
+  @HttpCode(200)
+  logout(@Request() req: ExpressRequest) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader?.split(' ')[1] || '';
+
+    return this.authService.logout(token);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('refresh')
-  async refresh(@Request() req) {
-    return this.authService.refreshToken(req.user);
-  }
 }
