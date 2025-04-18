@@ -8,14 +8,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ConceptType {
+  Expense
+  Ingress
+}
+
 model User {
   id                Int       @id @default(autoincrement())
   name              String
   email             String    @unique
   emailVerifiedAt   DateTime? @map("email_verified_at")
   password          String
+  company           Company   @relation(fields: [companyId], references: [id])
+  companyId         Int       @map("company_id")
   createdAt         DateTime  @default(now()) @map("created_at")
-  updatedAt         DateTime  @updatedAt @map("updated_at")
+  updatedAt         DateTime  @updatedAt        @map("updated_at")
 }
 
 model BlacklistedToken {
@@ -23,4 +30,109 @@ model BlacklistedToken {
   token     String   @unique
   expiredAt DateTime @map("expired_at")
   createdAt DateTime @default(now()) @map("created_at")
+}
+
+model Company {
+  id             Int        @id @default(autoincrement())
+  companyCode    String     @map("company_code") @db.VarChar(20)
+  companyName    String     @map("company_name") @db.VarChar(200)
+  type           Int
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt        @map("updated_at")
+
+  users          User[]     
+  settings       Setting[]  
+  currencies     Currency[] 
+  concepts       Concept[]  
+  receipts       Receipt[]  
+  accounts       Account[]  
+}
+
+model Setting {
+  id             Int       @id @default(autoincrement())
+  currentMonth   String    @map("current_month") @db.VarChar(2)
+  currentYear    String    @map("current_year")  @db.VarChar(4)
+  company        Company   @relation(fields: [companyId], references: [id])
+  companyId      Int       @map("company_id")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt        @map("updated_at")
+}
+
+model Currency {
+  id             Int        @id @default(autoincrement())
+  initials       String     @db.VarChar(3)
+  description    String     @db.VarChar(100)
+  exchangeRate   Decimal    @map("exchange_rate") @db.Decimal(10,2)
+  company        Company    @relation(fields: [companyId], references: [id])
+  companyId      Int        @map("company_id")
+  isDefault      Boolean    @map("is_default") @default(false)
+  active         Boolean    @default(true)
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt        @map("updated_at")
+
+  accounts       Account[]  
+  receipts       Receipt[]  
+}
+
+model Concept {
+  id             Int         @id @default(autoincrement())
+  description    String      @db.VarChar(100)
+  type           ConceptType
+  company        Company     @relation(fields: [companyId], references: [id])
+  companyId      Int         @map("company_id")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt        @map("updated_at")
+
+  receipts       Receipt[]   
+}
+
+model Receipt {
+  id             Int        @id @default(autoincrement())
+  date           DateTime   @db.Date
+  concept        Concept    @relation(fields: [conceptId], references: [id])
+  conceptId      Int        @map("concept_id")
+  description    String?    @db.VarChar(150)
+  amount         Decimal    @db.Decimal(10,2)
+  currency       Currency   @relation(fields: [currencyId], references: [id])
+  currencyId     Int        @map("currency_id")
+  actualAmount   Decimal    @map("actual_amount") @db.Decimal(10,2)
+  account        Account    @relation(fields: [accountId], references: [id])
+  accountId      Int        @map("account_id")
+  company        Company    @relation(fields: [companyId], references: [id])
+  companyId      Int        @map("company_id")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt        @map("updated_at")
+}
+
+model Account {
+  id             Int        @id @default(autoincrement())
+  code           String     @db.VarChar(20)
+  description    String     @db.VarChar(100)
+  currency       Currency   @relation(fields: [currencyId], references: [id])
+  currencyId     Int        @map("currency_id")
+  company        Company    @relation(fields: [companyId], references: [id])
+  companyId      Int        @map("company_id")
+  bank           Bank?      @relation(fields: [bankId], references: [id])
+  bankId         Int?       @map("bank_id")
+  active         Boolean    @default(true)
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt        @map("updated_at")
+
+  receipts       Receipt[]  
+}
+
+model Bank {
+  id             Int        @id @default(autoincrement())
+  swift          String     @db.VarChar(25)
+  bankName       String     @map("bank_name") @db.VarChar(100)
+  cis            String     @db.VarChar(10)
+  branchName     String?    @map("branch_name") @db.VarChar(100)
+  address        String?    @db.VarChar(200)
+  phoneNumber    String?    @map("phone_number") @db.VarChar(15)
+  email          String?    @db.VarChar(100)
+  active         Boolean    @default(true)
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt        @map("updated_at")
+
+  accounts       Account[]  
 }
