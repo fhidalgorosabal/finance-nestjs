@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { env } from 'src/config';
 import { responseData, responseError } from 'src/common/utils/response.util';
-import { UserResponse, Payload } from './entities';
+import { UserResponse, Payload } from './entities/auth.entity';
 
 @Injectable()
 export class AuthService {
