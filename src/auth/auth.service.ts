@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
@@ -14,7 +10,7 @@ import { responseData, responseError } from 'src/common/utils/response.util';
 export class AuthService {
   constructor(
     private prisma: PrismaService,
-    private jwtService: JwtService,
+    private jwtService: JwtService
   ) {}
 
   async register(data: RegisterDto) {
@@ -47,7 +43,7 @@ export class AuthService {
           token: this.generateToken(payload),
         },
         'Usuario registrado correctamente.',
-        201,
+        201
       );
     } catch (error) {
       return responseError(error, 'No se pudo registrar el usuario.');
@@ -67,7 +63,7 @@ export class AuthService {
           user: safeUser,
           token: this.generateToken(payload),
         },
-        'Usuario autenticado correctamente.',
+        'Usuario autenticado correctamente.'
       );
     } catch (error) {
       return responseError(error, 'Credenciales incorrectas.', 401);
@@ -77,13 +73,10 @@ export class AuthService {
   refresh(user: any) {
     try {
       const payload = { sub: user.id, email: user.email };
-  
+
       const token = this.generateToken(payload);
-  
-      return responseData(
-        { token },
-        'Token de actualización.'
-      );
+
+      return responseData({ token }, 'Token de actualización.');
     } catch (error) {
       return responseError(error, 'No se pudo refrescar el token.');
     }
@@ -99,7 +92,7 @@ export class AuthService {
 
       return responseData(
         {
-          user: safeUser
+          user: safeUser,
         },
         'Usuario autenticado.'
       );
@@ -109,15 +102,15 @@ export class AuthService {
   }
 
   logout(token: string) {
-    if (token !=='') this.blacklistToken(token);
-    
+    if (token !== '') this.blacklistToken(token);
+
     return responseData([], 'Se ha cerrado la sesión correctamente.');
   }
 
   private async validateUser(email: string, password: string) {
-    const user = await this.prisma.user.findUnique({ where: { email } });    
+    const user = await this.prisma.user.findUnique({ where: { email } });
 
-    if (user && await bcrypt.compare(password, user.password)) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       return user;
     }
 
@@ -135,7 +128,7 @@ export class AuthService {
   private async blacklistToken(token: string) {
     const decoded: any = this.jwtService.decode(token);
     const expiredAt = new Date(decoded.exp * 1000);
-  
+
     await this.prisma.blacklistedToken.create({
       data: {
         token,
@@ -143,5 +136,4 @@ export class AuthService {
       },
     });
   }
-  
 }

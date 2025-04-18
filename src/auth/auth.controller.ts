@@ -1,17 +1,8 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  UseGuards,
-  Request,
-  HttpCode,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, Request, HttpCode } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { RegisterDto } from './dto/register.dto';
 import { Request as ExpressRequest } from 'express';
-
 
 @Controller('auth')
 export class AuthController {
@@ -50,5 +41,4 @@ export class AuthController {
 
     return this.authService.logout(token);
   }
-
 }
