@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { env } from 'src/config';
 import { responseData, responseError } from 'src/common/utils/response.util';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +35,6 @@ export class AuthService {
       });
 
       const payload = { sub: user.id, email: user.email };
-
       const { password, ...safeUser } = user;
 
       return responseData(
@@ -53,9 +53,7 @@ export class AuthService {
   async login(data: { email: string; password: string }) {
     try {
       const user = await this.validateUser(data.email, data.password);
-
       const payload = { sub: user.id, email: user.email };
-
       const { password, ...safeUser } = user;
 
       return responseData(
@@ -70,40 +68,39 @@ export class AuthService {
     }
   }
 
-  refresh(user: any) {
+  async refresh(payload: { sub: number; email: string }, token: string) {
     try {
-      const payload = { sub: user.id, email: user.email };
+      const user = await this.prisma.user.findUnique({ where: { id: payload.sub } });
 
-      const token = this.generateToken(payload);
+      if (!user) throw new UnauthorizedException('Usuario no encontrado.');
 
-      return responseData({ token }, 'Token de actualización.');
+      if (token !== '') await this.blacklistToken(token);
+
+      const newPayload = { sub: user.id, email: user.email };
+      const newToken = this.generateToken(newPayload);
+
+      return responseData({ token: newToken }, 'Token de actualización.');
     } catch (error) {
       return responseError(error, 'No se pudo refrescar el token.');
     }
   }
 
-  async profile(userId: number) {
+  async profile(sub: number) {
     try {
-      const user = await this.prisma.user.findUnique({ where: { id: userId } });
+      const user = await this.prisma.user.findUnique({ where: { id: sub } });
 
       if (!user) throw new UnauthorizedException('Usuario no encontrado.');
 
       const { password, ...safeUser } = user;
 
-      return responseData(
-        {
-          user: safeUser,
-        },
-        'Usuario autenticado.'
-      );
+      return responseData({ user: safeUser }, 'Usuario autenticado.');
     } catch (error) {
       return responseError(error, 'No se pudo obtener el perfil.', 401);
     }
   }
 
-  logout(token: string) {
-    if (token !== '') this.blacklistToken(token);
-
+  async logout(token: string) {
+    if (token !== '') await this.blacklistToken(token);
     return responseData([], 'Se ha cerrado la sesión correctamente.');
   }
 
