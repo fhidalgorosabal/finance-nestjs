@@ -6,6 +6,7 @@ export interface Payload {
 export interface UserResponse {
     name: string;
     email: string;  
+    password?: string;
     companyId: number; 
 }
 

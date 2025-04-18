@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsEmail, IsInt, IsNotEmpty, MinLength } from 'class-validator';
 
 export class RegisterDto {
@@ -11,5 +12,6 @@ export class RegisterDto {
   password: string;
 
   @IsInt()
+  @Type(() => Number)
   companyId: number;
 }

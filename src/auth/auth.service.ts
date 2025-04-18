@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { env } from 'src/config';
 import { responseData, responseError } from 'src/common/utils/response.util';
-import { UserResponse, Payload } from './entities/auth.entity';
+import { Payload, UserResponse } from './entities/auth.entity';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +14,7 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async register(data: RegisterDto) {
+  async register(data: RegisterDto) {    
     try {
       const userExists = await this.prisma.user.findUnique({
         where: { email: data.email },
@@ -36,7 +36,8 @@ export class AuthService {
       });
 
       const payload: Payload = { sub: user.id, email: user.email };
-      const safeUser: UserResponse = user;
+      const safeUser: UserResponse = { ...user };
+      delete safeUser.password;
 
       return responseData(
         {
@@ -55,7 +56,8 @@ export class AuthService {
     try {
       const user = await this.validateUser(data.email, data.password);
       const payload: Payload = { sub: user.id, email: user.email };
-      const safeUser: UserResponse = user;
+      const safeUser: UserResponse = { ...user };
+      delete safeUser.password;
 
       return responseData(
         {
@@ -92,7 +94,8 @@ export class AuthService {
 
       if (!user) throw new UnauthorizedException('Usuario no encontrado.');
 
-      const safeUser: UserResponse = user;
+      const safeUser: UserResponse = { ...user };
+      delete safeUser.password;
 
       return responseData({ user: safeUser }, 'Usuario autenticado.');
     } catch (error) {
