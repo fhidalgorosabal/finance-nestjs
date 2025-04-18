@@ -1,9 +1,9 @@
 import { Controller, Post, Body, Get, UseGuards, Request, HttpCode } from '@nestjs/common';
 import { Request as ExpressRequest } from 'express';
-import { User } from '@prisma/client';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { RegisterDto } from './dto/register.dto';
+import { Payload } from './entities';
 
 @Controller('auth')
 export class AuthController {
@@ -27,7 +27,7 @@ export class AuthController {
     const authHeader = req.headers['authorization'];
     const token = authHeader?.split(' ')[1] || '';
 
-    const user = req.user as { sub: number; email: string };
+    const user = req.user as Payload;
 
     return this.authService.refresh(user, token);
   }

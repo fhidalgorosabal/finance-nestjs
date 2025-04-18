@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { env } from 'src/config';
 import { responseData, responseError } from 'src/common/utils/response.util';
-import { User } from '@prisma/client';
+import { UserResponse, Payload } from './entities';
 
 @Injectable()
 export class AuthService {
@@ -31,11 +31,12 @@ export class AuthService {
           name: data.name,
           email: data.email,
           password: hashedPassword,
+          companyId: data.companyId,
         },
       });
 
-      const payload = { sub: user.id, email: user.email };
-      const { password, ...safeUser } = user;
+      const payload: Payload = { sub: user.id, email: user.email };
+      const safeUser: UserResponse = user;
 
       return responseData(
         {
@@ -53,8 +54,8 @@ export class AuthService {
   async login(data: { email: string; password: string }) {
     try {
       const user = await this.validateUser(data.email, data.password);
-      const payload = { sub: user.id, email: user.email };
-      const { password, ...safeUser } = user;
+      const payload: Payload = { sub: user.id, email: user.email };
+      const safeUser: UserResponse = user;
 
       return responseData(
         {
@@ -68,7 +69,7 @@ export class AuthService {
     }
   }
 
-  async refresh(payload: { sub: number; email: string }, token: string) {
+  async refresh(payload: Payload, token: string) {
     try {
       const user = await this.prisma.user.findUnique({ where: { id: payload.sub } });
 
@@ -91,7 +92,7 @@ export class AuthService {
 
       if (!user) throw new UnauthorizedException('Usuario no encontrado.');
 
-      const { password, ...safeUser } = user;
+      const safeUser: UserResponse = user;
 
       return responseData({ user: safeUser }, 'Usuario autenticado.');
     } catch (error) {
@@ -114,7 +115,7 @@ export class AuthService {
     throw new UnauthorizedException('El email o la contraseña son incorrectos.');
   }
 
-  private generateToken(payload: any) {
+  private generateToken(payload: Payload) {
     return {
       access_token: this.jwtService.sign(payload),
       token_type: 'bearer',
@@ -123,7 +124,7 @@ export class AuthService {
   }
 
   private async blacklistToken(token: string) {
-    const decoded: any = this.jwtService.decode(token);
+    const decoded = this.jwtService.decode(token);
     const expiredAt = new Date(decoded.exp * 1000);
 
     await this.prisma.blacklistedToken.create({
