@@ -15,6 +15,8 @@ import { CreateConceptDto } from './dto/create-concept.dto';
 import { UpdateConceptDto } from './dto/update-concept.dto';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { ListConceptsDto } from './dto/list-concepts.dto';
+import { DataResponse } from 'src/common/utils/response.util';
+import { Concept } from '@prisma/client';
 
 @Controller('concept')
 export class ConceptController {
@@ -22,26 +24,26 @@ export class ConceptController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createConceptDto: CreateConceptDto) {
+  create(@Body() createConceptDto: CreateConceptDto): Promise<DataResponse<Concept>> {
     return this.conceptService.create(createConceptDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
+  findAll(): Promise<DataResponse<Concept[]>> {
     return this.conceptService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('list')
   @HttpCode(200)
-  list(@Body() listConceptsDto: ListConceptsDto) {    
+  list(@Body() listConceptsDto: ListConceptsDto): Promise<DataResponse<Concept[]>> {    
     return this.conceptService.list(listConceptsDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<DataResponse<Concept>> {
     return this.conceptService.findOne(id);
   }
 
@@ -49,12 +51,12 @@ export class ConceptController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateConceptDto: UpdateConceptDto,
-  ) {
+  ): Promise<DataResponse<Concept>> {
     return this.conceptService.update(id, updateConceptDto);
   }
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number): Promise<DataResponse<Concept>> {
     return this.conceptService.remove(id);
   }
 }
