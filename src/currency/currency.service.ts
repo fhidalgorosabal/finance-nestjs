@@ -6,7 +6,7 @@ import { UpdateCurrencyDto } from './dto/update-currency.dto';
 import { ListCurrencyDto } from './dto/list-currency.dto';
 import { DefaultCurrencyDto } from './dto/default-currency.dto';
 import { 
-  ResponseData, 
+  DataResponse, 
   responseData, 
   responseError,
 } from 'src/common/utils/response.util';
@@ -15,7 +15,7 @@ import {
 export class CurrencyService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateCurrencyDto): Promise<ResponseData<Currency>> {
+  async create(dto: CreateCurrencyDto): Promise<DataResponse<Currency>> {
     try {
       const currency = await this.prisma.currency.create({
         data: {
@@ -33,7 +33,7 @@ export class CurrencyService {
     }
   }
 
-  async findAll(): Promise<ResponseData<Currency[]>> {
+  async findAll(): Promise<DataResponse<Currency[]>> {
     try {
       const currencies = await this.prisma.currency.findMany();
       return responseData(currencies, 'Listado de las monedas');
@@ -42,7 +42,7 @@ export class CurrencyService {
     }
   }
 
-  async list(dto: ListCurrencyDto): Promise<ResponseData<Currency[]>> {
+  async list(dto: ListCurrencyDto): Promise<DataResponse<Currency[]>> {
     try {
       const currencies = await this.prisma.currency.findMany({
         where: {
@@ -55,7 +55,7 @@ export class CurrencyService {
     }
   }
 
-  async findOne(id: number): Promise<ResponseData<Currency>> {
+  async findOne(id: number): Promise<DataResponse<Currency>> {
     try {
       const currency = await this.prisma.currency.findUniqueOrThrow({
         where: { id },
@@ -66,7 +66,7 @@ export class CurrencyService {
     }
   }
 
-  async update(id: number, dto: UpdateCurrencyDto): Promise<ResponseData<Currency>> {
+  async update(id: number, dto: UpdateCurrencyDto): Promise<DataResponse<Currency>> {
     await this.findOne(id);
     try {    
       const data: Prisma.CurrencyUpdateInput = this.buildCurrencyData(dto);  
@@ -80,7 +80,7 @@ export class CurrencyService {
     }
   }
 
-  async remove(id: number): Promise<ResponseData<Currency>> {
+  async remove(id: number): Promise<DataResponse<Currency>> {
     await this.findOne(id);
     try {
       const currency = await this.prisma.currency.delete({ where: { id } });
@@ -90,7 +90,7 @@ export class CurrencyService {
     }
   }
 
-  async defaultCurrency(companyId: number): Promise<ResponseData<Currency>> {
+  async defaultCurrency(companyId: number): Promise<DataResponse<Currency>> {
     const msjError = 'No se encontró una moneda predeterminada para esta compañía.';
     try {
       const currency = await this.prisma.currency.findFirstOrThrow({
@@ -105,7 +105,7 @@ export class CurrencyService {
     }
   }
 
-  async postDefaultCurrency(defaultCurrencyDto: DefaultCurrencyDto): Promise<ResponseData<Currency>> {
+  async postDefaultCurrency(defaultCurrencyDto: DefaultCurrencyDto): Promise<DataResponse<Currency>> {
     const { data: currency } = await this.findOne(defaultCurrencyDto.id);  
     try {
       await this.prisma.currency.updateMany({

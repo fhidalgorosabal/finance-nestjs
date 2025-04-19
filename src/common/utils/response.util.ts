@@ -9,7 +9,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 
-export interface ResponseData<T> {
+export interface DataResponse<T> {
   status?: string;
   message?: string;
   data?: T;
@@ -24,7 +24,7 @@ export interface ResponseError {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function responseData(data: any, message: string, code = HttpStatus.OK, status = 'success'): ResponseData<any>  {
+export function responseData(data: any, message: string, code = HttpStatus.OK, status = 'success'): DataResponse<any>  {
   return {
     status,
     message,
