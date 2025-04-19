@@ -1,5 +1,6 @@
-import { IsString, IsIn, IsNotEmpty, IsInt } from 'class-validator';
 import { ConceptType } from '@prisma/client';
+import { IsString, IsIn, IsNotEmpty, IsInt } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateConceptDto {
   @IsString()
@@ -10,5 +11,6 @@ export class CreateConceptDto {
   type: ConceptType;
 
   @IsInt()
-  company_id: number;
+  @Type(() => Number)
+  companyId: number;
 }

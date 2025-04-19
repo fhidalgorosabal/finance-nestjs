@@ -12,12 +12,12 @@ export class ConceptService {
 
   async create(createConceptDto: CreateConceptDto) {
     try {
-      const { description, type, company_id } = createConceptDto;
+      const { description, type, companyId } = createConceptDto;
       const concept = await this.prisma.concept.create({
         data: {
           description,
           type,
-          company: { connect: { id: company_id } },
+          company: { connect: { id: companyId } },
         },
       });
       return responseData(concept, 'Se ha creado el concepto correctamente.', 201);
@@ -39,7 +39,7 @@ export class ConceptService {
     const { companyId, type } = listConceptsDto;
     try {      
       if (!companyId || !type) {
-        throw new BadRequestException('company_id y type son requeridos');
+        throw new BadRequestException('companyId y type son requeridos');
       }
       const concepts = await this.getConcepts(companyId, type);
       return responseData(concepts, `Listado de los conceptos de ${type}`);
@@ -59,10 +59,10 @@ export class ConceptService {
 
   async update(id: number, updateConceptDto: UpdateConceptDto) {
     try {
-      const { company_id, ...fields } = updateConceptDto;
+      const { companyId, ...fields } = updateConceptDto;
       const data: Prisma.ConceptUpdateInput = {
         ...fields,
-        ...(company_id !== undefined && { company: { connect: { id: company_id } } }),
+        ...(companyId !== undefined && { company: { connect: { id: companyId } } }),
       };
       const concept = await this.prisma.concept.update({
         where: { id },
