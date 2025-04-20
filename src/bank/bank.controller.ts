@@ -7,6 +7,7 @@ import {
   Param, 
   Delete, 
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { Bank } from '@prisma/client';
 import { BankService } from './bank.service';
@@ -33,22 +34,22 @@ export class BankController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<DataResponse<Bank>> {
-    return this.bankService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<DataResponse<Bank>> {
+    return this.bankService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
-    @Param('id') id: string, 
+    @Param('id', ParseIntPipe) id: number, 
     @Body() updateBankDto: UpdateBankDto
   ): Promise<DataResponse<Bank>> {
-    return this.bankService.update(+id, updateBankDto);
+    return this.bankService.update(id, updateBankDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<DataResponse<Bank>> {
-    return this.bankService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number): Promise<DataResponse<Bank>> {
+    return this.bankService.remove(id);
   }
 }

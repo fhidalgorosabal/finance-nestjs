@@ -3,7 +3,7 @@ import { Currency, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
-import { ListCurrencyDto } from './dto/list-currency.dto';
+import { ListCurrenciesDto } from './dto/list-currencies.dto';
 import { DefaultCurrencyDto } from './dto/default-currency.dto';
 import { 
   DataResponse, 
@@ -42,11 +42,12 @@ export class CurrencyService {
     }
   }
 
-  async list(listCurrencyDto: ListCurrencyDto): Promise<DataResponse<Currency[]>> {
+  async list(listCurrenciesDto: ListCurrenciesDto): Promise<DataResponse<Currency[]>> {
     try {
       const currencies = await this.prisma.currency.findMany({
         where: {
-          companyId: listCurrencyDto.companyId,
+          companyId: listCurrenciesDto.companyId,
+          active: true,
         },
       });
       return responseData(currencies, 'Listado de las monedas');
@@ -57,8 +58,11 @@ export class CurrencyService {
 
   async findOne(id: number): Promise<DataResponse<Currency>> {
     try {
-      const currency = await this.prisma.currency.findUniqueOrThrow({
-        where: { id },
+      const currency = await this.prisma.currency.findUniqueOrThrow({ 
+        where: { 
+          id,
+          active: true,
+        } 
       });
       return responseData(currency, `Detalles de la moneda: ${id}.`);
     } catch (error) {
@@ -68,13 +72,17 @@ export class CurrencyService {
 
   async update(id: number, updateCurrencyDto: UpdateCurrencyDto): Promise<DataResponse<Currency>> {
     await this.findOne(id);
-    try {    
-      const data: Prisma.CurrencyUpdateInput = this.buildCurrencyData(updateCurrencyDto);  
-      const updatedCurrency = await this.prisma.currency.update({
+    try {
+      const { companyId, ...fields } = updateCurrencyDto;
+      const data: Prisma.CurrencyUpdateInput = {
+        ...fields,
+        ...(companyId !== undefined && { company: { connect: { id: companyId } } }),
+      };
+      const currency = await this.prisma.currency.update({
         where: { id },
         data,
-      });  
-      return responseData(updatedCurrency, 'Se ha actualizado la moneda correctamente.');
+      });
+      return responseData(currency, 'Se ha actualizado la moneda correctamente.');
     } catch (error) {
       throw responseError(error, 'No se pudo actualizar la moneda.');
     }

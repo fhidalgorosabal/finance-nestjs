@@ -13,7 +13,7 @@ import {
 import { CurrencyService } from './currency.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
-import { ListCurrencyDto } from './dto/list-currency.dto';
+import { ListCurrenciesDto } from './dto/list-currencies.dto';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { DefaultCurrencyDto } from './dto/default-currency.dto';
 import { DataResponse } from 'src/common/utils/response.util';
@@ -38,8 +38,8 @@ export class CurrencyController {
   @UseGuards(JwtAuthGuard)
   @Post('list')
   @HttpCode(200)
-  list(@Body() listCurrencyDto: ListCurrencyDto): Promise<DataResponse<Currency[]>> {
-    return this.currencyService.list(listCurrencyDto);
+  list(@Body() listCurrenciesDto: ListCurrenciesDto): Promise<DataResponse<Currency[]>> {
+    return this.currencyService.list(listCurrenciesDto);
   }
 
   @UseGuards(JwtAuthGuard)

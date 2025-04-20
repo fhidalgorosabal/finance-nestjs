@@ -1,7 +1,7 @@
 import { IsInt, IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class ListCurrencyDto {
+export class ListAccountsDto {
   @IsInt()
   @IsNotEmpty()
   @Type(() => Number)

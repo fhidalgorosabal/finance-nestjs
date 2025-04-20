@@ -4,9 +4,10 @@ import { ConceptModule } from './concept/concept.module';
 import { CurrencyModule } from './currency/currency.module';
 import { CompanyModule } from './company/company.module';
 import { BankModule } from './bank/bank.module';
+import { AccountModule } from './account/account.module';
 
 @Module({
-  imports: [AuthModule, ConceptModule, CurrencyModule, CompanyModule, BankModule],
+  imports: [AuthModule, ConceptModule, CurrencyModule, CompanyModule, BankModule, AccountModule],
   controllers: [],
   providers: [],
 })
