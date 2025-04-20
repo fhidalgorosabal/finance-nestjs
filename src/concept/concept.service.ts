@@ -53,7 +53,7 @@ export class ConceptService {
       const concept = await this.prisma.concept.findUniqueOrThrow({ where: { id } });
       return responseData(concept, `Detalles del concepto: ${id}.`);
     } catch (e) {
-      throw responseError(e, `No se pudo obtener el concepto: ${id}.`);
+      throw responseError(e, `No se pudo obtener el concepto: ${id}.`, HttpStatus.NOT_FOUND);
     }
   }
 

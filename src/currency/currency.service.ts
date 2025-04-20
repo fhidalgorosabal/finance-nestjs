@@ -15,16 +15,16 @@ import {
 export class CurrencyService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateCurrencyDto): Promise<DataResponse<Currency>> {
+  async create(createCurrencyDto: CreateCurrencyDto): Promise<DataResponse<Currency>> {
     try {
       const currency = await this.prisma.currency.create({
         data: {
-          initials: dto.initials,
-          description: dto.description,
-          exchangeRate: dto.exchangeRate,
-          isDefault: dto.isDefault ?? false,
+          initials: createCurrencyDto.initials,
+          description: createCurrencyDto.description,
+          exchangeRate: createCurrencyDto.exchangeRate,
+          isDefault: createCurrencyDto.isDefault ?? false,
           active: true,
-          company: { connect: { id: dto.companyId } },
+          company: { connect: { id: createCurrencyDto.companyId } },
         },
       });
       return responseData(currency, 'Se ha creado la moneda correctamente.', HttpStatus.CREATED);
@@ -42,11 +42,11 @@ export class CurrencyService {
     }
   }
 
-  async list(dto: ListCurrencyDto): Promise<DataResponse<Currency[]>> {
+  async list(listCurrencyDto: ListCurrencyDto): Promise<DataResponse<Currency[]>> {
     try {
       const currencies = await this.prisma.currency.findMany({
         where: {
-          companyId: dto.companyId,
+          companyId: listCurrencyDto.companyId,
         },
       });
       return responseData(currencies, 'Listado de las monedas');
@@ -66,10 +66,10 @@ export class CurrencyService {
     }
   }
 
-  async update(id: number, dto: UpdateCurrencyDto): Promise<DataResponse<Currency>> {
+  async update(id: number, updateCurrencyDto: UpdateCurrencyDto): Promise<DataResponse<Currency>> {
     await this.findOne(id);
     try {    
-      const data: Prisma.CurrencyUpdateInput = this.buildCurrencyData(dto);  
+      const data: Prisma.CurrencyUpdateInput = this.buildCurrencyData(updateCurrencyDto);  
       const updatedCurrency = await this.prisma.currency.update({
         where: { id },
         data,

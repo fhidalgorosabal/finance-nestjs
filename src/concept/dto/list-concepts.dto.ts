@@ -1,13 +1,15 @@
 import { ConceptType } from "@prisma/client";
-import { IsIn, IsInt } from "class-validator";
+import { IsIn, IsInt, IsNotEmpty } from "class-validator";
 import { Type } from "class-transformer";
 
 export class ListConceptsDto {
     @IsIn([ConceptType.Expense, ConceptType.Ingress])
+    @IsNotEmpty()
     @Type(() => Number)
     type: ConceptType;
 
     @IsInt()
+    @IsNotEmpty()
     @Type(() => Number)
     companyId: number;
 }

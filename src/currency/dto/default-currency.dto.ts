@@ -1,8 +1,9 @@
 import { Type } from "class-transformer";
-import { IsInt } from "class-validator";
+import { IsInt, IsNotEmpty } from "class-validator";
 
 export class DefaultCurrencyDto {
   @IsInt()
+  @IsNotEmpty()
   @Type(() => Number)
   id: number;
 }

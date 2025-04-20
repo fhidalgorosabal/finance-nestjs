@@ -17,6 +17,7 @@ import {
 } from 'src/common/utils/response.util';
 import {
   AuthResponse,
+  Login,
   Payload,
   TokenResponse,
   UserResponse,
@@ -30,9 +31,9 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async register(data: RegisterDto): Promise<DataResponse<AuthResponse>> {
+  async register(registerDto: RegisterDto): Promise<DataResponse<AuthResponse>> {
     const existingUser = await this.prisma.user.findUnique({
-      where: { email: data.email },
+      where: { email: registerDto.email },
     });
 
     if (existingUser) {
@@ -40,14 +41,14 @@ export class AuthService {
     }
 
     try {
-      const hashedPassword = await bcrypt.hash(data.password, 10);
+      const hashedPassword = await bcrypt.hash(registerDto.password, 10);
 
       const user = await this.prisma.user.create({
         data: {
-          name: data.name,
-          email: data.email,
+          name: registerDto.name,
+          email: registerDto.email,
           password: hashedPassword,
-          companyId: data.companyId,
+          companyId: registerDto.companyId,
         },
       });
 
@@ -61,7 +62,7 @@ export class AuthService {
     }
   }
 
-  async login(data: { email: string; password: string }): Promise<DataResponse<AuthResponse>> {
+  async login(data: Login): Promise<DataResponse<AuthResponse>> {
     try {
       const user = await this.validateUser(data.email, data.password);
       return responseData(
@@ -105,7 +106,7 @@ export class AuthService {
         'Usuario autenticado.'
       );
     } catch (error) {
-      throw responseError(error, 'No se pudo obtener el perfil.');
+      throw responseError(error, 'No se pudo obtener el perfil.', HttpStatus.NOT_FOUND);
     }
   }
 
