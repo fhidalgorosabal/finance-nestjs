@@ -28,8 +28,8 @@ export class CurrencyService {
         },
       });
       return responseData(currency, 'Se ha creado la moneda correctamente.', HttpStatus.CREATED);
-    } catch (e) {
-      throw responseError(e, 'No se pudo crear la moneda.');
+    } catch (error) {
+      throw responseError(error, 'No se pudo crear la moneda.');
     }
   }
 
@@ -37,8 +37,8 @@ export class CurrencyService {
     try {
       const currencies = await this.prisma.currency.findMany();
       return responseData(currencies, 'Listado de las monedas');
-    } catch (e) {
-      throw responseError(e, 'No se pudo obtener el listado de monedas.');
+    } catch (error) {
+      throw responseError(error, 'No se pudo obtener el listado de monedas.');
     }
   }
 
@@ -50,8 +50,8 @@ export class CurrencyService {
         },
       });
       return responseData(currencies, 'Listado de las monedas');
-    } catch (e) {
-      throw responseError(e, 'No se pudo obtener el listado de monedas.');
+    } catch (error) {
+      throw responseError(error, 'No se pudo obtener el listado de monedas.');
     }
   }
 
@@ -61,8 +61,8 @@ export class CurrencyService {
         where: { id },
       });
       return responseData(currency, `Detalles de la moneda: ${id}.`);
-    } catch (e) {
-      throw responseError(e, `No se pudo obtener la moneda: ${id}.`, HttpStatus.NOT_FOUND);
+    } catch (error) {
+      throw responseError(error, `No se pudo obtener la moneda: ${id}.`, HttpStatus.NOT_FOUND);
     }
   }
 
@@ -75,8 +75,8 @@ export class CurrencyService {
         data,
       });  
       return responseData(updatedCurrency, 'Se ha actualizado la moneda correctamente.');
-    } catch (e) {
-      throw responseError(e, 'No se pudo actualizar la moneda.');
+    } catch (error) {
+      throw responseError(error, 'No se pudo actualizar la moneda.');
     }
   }
 
@@ -85,8 +85,8 @@ export class CurrencyService {
     try {
       const currency = await this.prisma.currency.delete({ where: { id } });
       return responseData(currency, 'Se ha eliminado la moneda correctamente.');
-    } catch (e) {
-      throw responseError(e, `No se pudo eliminar la moneda: ${id}.`);
+    } catch (error) {
+      throw responseError(error, `No se pudo eliminar la moneda: ${id}.`);
     }
   }
 
@@ -100,8 +100,8 @@ export class CurrencyService {
         },
       });         
       return responseData(currency, 'Moneda predeterminada.');
-    } catch (e) {
-      throw responseError(e, msjError, HttpStatus.NOT_FOUND);
+    } catch (error) {
+      throw responseError(error, msjError, HttpStatus.NOT_FOUND);
     }
   }
 
@@ -119,8 +119,8 @@ export class CurrencyService {
       });
   
       return responseData(updatedCurrency, 'Moneda predeterminada actualizada correctamente.');
-    } catch (e) {
-      throw responseError(e, 'No se pudo actualizar la moneda predeterminada.');
+    } catch (error) {
+      throw responseError(error, 'No se pudo actualizar la moneda predeterminada.');
     }
   }
   

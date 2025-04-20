@@ -10,17 +10,10 @@ import {
 } from '@nestjs/common';
 
 export interface DataResponse<T> {
-  status?: string;
-  message?: string;
-  data?: T;
-  code?: number;
-}
-
-export interface ResponseError {
-  status?: string;
-  message?: string;
-  errors?: { error: string } | string;
-  code?: number;
+  status: string;
+  message: string;
+  data: T;
+  code: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

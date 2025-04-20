@@ -21,8 +21,8 @@ export class ConceptService {
         },
       });
       return responseData(concept, 'Se ha creado el concepto correctamente.', HttpStatus.CREATED);
-    } catch (e) {
-      throw responseError(e, 'No se pudo crear el concepto.');
+    } catch (error) {
+      throw responseError(error, 'No se pudo crear el concepto.');
     }
   }
 
@@ -30,8 +30,8 @@ export class ConceptService {
     try {
       const concepts = await this.getConcepts();
       return responseData(concepts, 'Listado de los conceptos');
-    } catch (e) {
-      throw responseError(e, 'No se pudo obtener el listado de conceptos.');
+    } catch (error) {
+      throw responseError(error, 'No se pudo obtener el listado de conceptos.');
     }
   }
 
@@ -43,8 +43,8 @@ export class ConceptService {
       }
       const concepts = await this.getConcepts(companyId, type);
       return responseData(concepts, `Listado de los conceptos de ${type}`);
-    } catch (e) {
-      throw responseError(e, 'No se pudo obtener el listado de conceptos.');
+    } catch (error) {
+      throw responseError(error, 'No se pudo obtener el listado de conceptos.');
     }
   }
 
@@ -52,8 +52,8 @@ export class ConceptService {
     try {
       const concept = await this.prisma.concept.findUniqueOrThrow({ where: { id } });
       return responseData(concept, `Detalles del concepto: ${id}.`);
-    } catch (e) {
-      throw responseError(e, `No se pudo obtener el concepto: ${id}.`, HttpStatus.NOT_FOUND);
+    } catch (error) {
+      throw responseError(error, `No se pudo obtener el concepto: ${id}.`, HttpStatus.NOT_FOUND);
     }
   }
 
@@ -70,8 +70,8 @@ export class ConceptService {
         data,
       });
       return responseData(concept, 'Se ha actualizado el concepto correctamente.');
-    } catch (e) {
-      throw responseError(e, 'No se pudo actualizar el concepto.');
+    } catch (error) {
+      throw responseError(error, 'No se pudo actualizar el concepto.');
     }
   }
 
@@ -80,8 +80,8 @@ export class ConceptService {
     try {
       const concept = await this.prisma.concept.delete({ where: { id } });
       return responseData(concept, 'Se ha eliminado el concepto correctamente.');
-    } catch (e) {
-      throw responseError(e, `No se pudo eliminar el concepto: ${id}.`);
+    } catch (error) {
+      throw responseError(error, `No se pudo eliminar el concepto: ${id}.`);
     }
   }
 

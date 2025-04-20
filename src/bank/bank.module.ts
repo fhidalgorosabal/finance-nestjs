@@ -1,0 +1,11 @@
+import { Module } from '@nestjs/common';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { BankService } from './bank.service';
+import { BankController } from './bank.controller';
+
+@Module({
+  imports: [PrismaModule],
+  controllers: [BankController],
+  providers: [BankService],
+})
+export class BankModule {}

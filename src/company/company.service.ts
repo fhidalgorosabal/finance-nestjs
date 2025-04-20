@@ -23,7 +23,7 @@ export class CompanyService {
       const companies = await this.prisma.company.findMany();
       return responseData(companies, 'Listado de empresas.');
     } catch (error) {
-      throw responseError(error, 'No se pudo obtener el listado.');
+      throw responseError(error, 'No se pudo obtener el listado de empresas.');
     }
   }
 
