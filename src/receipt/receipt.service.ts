@@ -5,6 +5,7 @@ import { CreateReceiptDto } from './dto/create-receipt.dto';
 import { DataResponse, responseData, responseError } from 'src/common/utils/response.util';
 import { ListReceiptsDto } from './dto/list-receipts.dto';
 import { UpdateReceiptDto } from './dto/update-receipt.dto';
+import { ReceiptInfo } from './entities/receipt.entity';
 
 @Injectable()
 export class ReceiptService {
@@ -39,7 +40,7 @@ export class ReceiptService {
     }
   }
   
-  async findAll(): Promise<DataResponse<Receipt[]>> {
+  async findAll(): Promise<DataResponse<ReceiptInfo[]>> {
     try {
       const receipts = await this.getReceipts();
       return responseData(receipts, 'Listado de comprobantes');
@@ -48,7 +49,7 @@ export class ReceiptService {
     }
   }
   
-  async list(listReceiptsDto: ListReceiptsDto): Promise<DataResponse<Receipt[]>> {
+  async list(listReceiptsDto: ListReceiptsDto): Promise<DataResponse<ReceiptInfo[]>> {
     try {
       const { type, companyId } = listReceiptsDto;
       const receipts = await this.getReceipts(type, companyId);
@@ -117,22 +118,37 @@ export class ReceiptService {
     }
   }
   
-  private async getReceipts(type?: ConceptType, companyId?: number) {      
-    const where: Prisma.ReceiptWhereInput = await this.getWhereFilter(type, companyId); 
-    
-    return this.prisma.receipt.findMany({
+  private async getReceipts(
+    type?: ConceptType,
+    companyId?: number
+  ): Promise<ReceiptInfo[]> {
+    const where: Prisma.ReceiptWhereInput = await this.getWhereFilter(type, companyId);
+  
+    const receipts = await this.prisma.receipt.findMany({
       where,
       select: {
         id: true,
         amount: true,
         date: true,
         actualAmount: true,
-        concept: { select: { description: true, type: true } },
+        concept: { select: { description: true , type: true } },
         currency: { select: { initials: true } },
         account: { select: { description: true } },
       },
     });
+  
+    return receipts.map(r => ({
+      id: r.id,
+      amount: r.amount.toNumber(),
+      date: r.date,
+      actualAmount: r.actualAmount.toNumber(),
+      concept: r.concept.description,
+      type: r.concept.type,
+      currency: r.currency.initials,
+      account: r.account.description,
+    }));
   }
+  
 
   private async getWhereFilter(type?: ConceptType, companyId?: number): Promise<Prisma.ReceiptWhereInput> {
     const where: Prisma.ReceiptWhereInput = {};

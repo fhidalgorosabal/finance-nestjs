@@ -17,6 +17,7 @@ import { UpdateReceiptDto } from './dto/update-receipt.dto';
 import { ListReceiptsDto } from './dto/list-receipts.dto';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { DataResponse } from 'src/common/utils/response.util';
+import { ReceiptInfo } from './entities/receipt.entity';
 
 @Controller('receipt')
 export class ReceiptController {
@@ -30,14 +31,14 @@ export class ReceiptController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(): Promise<DataResponse<Receipt[]>> {
+  findAll(): Promise<DataResponse<ReceiptInfo[]>> {
     return this.receiptService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('list')
   @HttpCode(200)
-  list(@Body() listReceiptsDto: ListReceiptsDto): Promise<DataResponse<Receipt[]>> {
+  list(@Body() listReceiptsDto: ListReceiptsDto): Promise<DataResponse<ReceiptInfo[]>> {
     return this.receiptService.list(listReceiptsDto);
   }
 

@@ -6,9 +6,10 @@ import { CompanyModule } from './company/company.module';
 import { BankModule } from './bank/bank.module';
 import { AccountModule } from './account/account.module';
 import { ReceiptModule } from './receipt/receipt.module';
+import { SettingModule } from './setting/setting.module';
 
 @Module({
-  imports: [AuthModule, ConceptModule, CurrencyModule, CompanyModule, BankModule, AccountModule, ReceiptModule],
+  imports: [AuthModule, ConceptModule, CurrencyModule, CompanyModule, BankModule, AccountModule, ReceiptModule, SettingModule],
   controllers: [],
   providers: [],
 })
