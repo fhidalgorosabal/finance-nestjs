@@ -19,7 +19,6 @@ import { DataResponse } from 'src/common/utils/response.util';
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createCompanyDto: CreateCompanyDto): Promise<DataResponse<Company>> {
     return this.companyService.create(createCompanyDto);

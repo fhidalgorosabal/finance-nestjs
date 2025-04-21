@@ -7,6 +7,7 @@ import { BankModule } from './modules/bank/bank.module';
 import { AccountModule } from './modules/account/account.module';
 import { ReceiptModule } from './modules/receipt/receipt.module';
 import { SettingModule } from './modules/setting/setting.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { SettingModule } from './modules/setting/setting.module';
     BankModule, 
     AccountModule, 
     ReceiptModule, 
-    SettingModule
+    SettingModule, DashboardModule
   ],
   controllers: [],
   providers: [],

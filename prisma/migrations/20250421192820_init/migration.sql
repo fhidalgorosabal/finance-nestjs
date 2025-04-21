@@ -2,7 +2,7 @@
 CREATE TYPE "ConceptType" AS ENUM ('Expense', 'Ingress');
 
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE "user" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -12,21 +12,21 @@ CREATE TABLE "User" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "BlacklistedToken" (
+CREATE TABLE "blacklisted_token" (
     "id" SERIAL NOT NULL,
     "token" TEXT NOT NULL,
     "expired_at" TIMESTAMP(3) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "BlacklistedToken_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "blacklisted_token_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Company" (
+CREATE TABLE "company" (
     "id" SERIAL NOT NULL,
     "company_code" VARCHAR(20) NOT NULL,
     "company_name" VARCHAR(200) NOT NULL,
@@ -34,11 +34,11 @@ CREATE TABLE "Company" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Company_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "company_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Setting" (
+CREATE TABLE "setting" (
     "id" SERIAL NOT NULL,
     "current_month" VARCHAR(2) NOT NULL,
     "current_year" VARCHAR(4) NOT NULL,
@@ -46,11 +46,11 @@ CREATE TABLE "Setting" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Setting_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "setting_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Currency" (
+CREATE TABLE "currency" (
     "id" SERIAL NOT NULL,
     "initials" VARCHAR(3) NOT NULL,
     "description" VARCHAR(100) NOT NULL,
@@ -61,11 +61,11 @@ CREATE TABLE "Currency" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Currency_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "currency_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Concept" (
+CREATE TABLE "concept" (
     "id" SERIAL NOT NULL,
     "description" VARCHAR(100) NOT NULL,
     "type" "ConceptType" NOT NULL,
@@ -73,11 +73,11 @@ CREATE TABLE "Concept" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Concept_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "concept_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Receipt" (
+CREATE TABLE "receipt" (
     "id" SERIAL NOT NULL,
     "date" DATE NOT NULL,
     "concept_id" INTEGER NOT NULL,
@@ -90,11 +90,11 @@ CREATE TABLE "Receipt" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Receipt_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "receipt_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Account" (
+CREATE TABLE "account" (
     "id" SERIAL NOT NULL,
     "code" VARCHAR(20) NOT NULL,
     "description" VARCHAR(100) NOT NULL,
@@ -105,11 +105,11 @@ CREATE TABLE "Account" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Account_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "account_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Bank" (
+CREATE TABLE "bank" (
     "id" SERIAL NOT NULL,
     "swift" VARCHAR(25) NOT NULL,
     "bank_name" VARCHAR(100) NOT NULL,
@@ -122,44 +122,44 @@ CREATE TABLE "Bank" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Bank_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "bank_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "BlacklistedToken_token_key" ON "BlacklistedToken"("token");
+CREATE UNIQUE INDEX "blacklisted_token_token_key" ON "blacklisted_token"("token");
 
 -- AddForeignKey
-ALTER TABLE "User" ADD CONSTRAINT "User_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "user" ADD CONSTRAINT "user_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Setting" ADD CONSTRAINT "Setting_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "setting" ADD CONSTRAINT "setting_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Currency" ADD CONSTRAINT "Currency_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "currency" ADD CONSTRAINT "currency_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Concept" ADD CONSTRAINT "Concept_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "concept" ADD CONSTRAINT "concept_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Receipt" ADD CONSTRAINT "Receipt_concept_id_fkey" FOREIGN KEY ("concept_id") REFERENCES "Concept"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "receipt" ADD CONSTRAINT "receipt_concept_id_fkey" FOREIGN KEY ("concept_id") REFERENCES "concept"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Receipt" ADD CONSTRAINT "Receipt_currency_id_fkey" FOREIGN KEY ("currency_id") REFERENCES "Currency"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "receipt" ADD CONSTRAINT "receipt_currency_id_fkey" FOREIGN KEY ("currency_id") REFERENCES "currency"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Receipt" ADD CONSTRAINT "Receipt_account_id_fkey" FOREIGN KEY ("account_id") REFERENCES "Account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "receipt" ADD CONSTRAINT "receipt_account_id_fkey" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Receipt" ADD CONSTRAINT "Receipt_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "receipt" ADD CONSTRAINT "receipt_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Account" ADD CONSTRAINT "Account_currency_id_fkey" FOREIGN KEY ("currency_id") REFERENCES "Currency"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "account" ADD CONSTRAINT "account_currency_id_fkey" FOREIGN KEY ("currency_id") REFERENCES "currency"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Account" ADD CONSTRAINT "Account_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "Company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "account" ADD CONSTRAINT "account_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "company"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Account" ADD CONSTRAINT "Account_bank_id_fkey" FOREIGN KEY ("bank_id") REFERENCES "Bank"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "account" ADD CONSTRAINT "account_bank_id_fkey" FOREIGN KEY ("bank_id") REFERENCES "bank"("id") ON DELETE SET NULL ON UPDATE CASCADE;
