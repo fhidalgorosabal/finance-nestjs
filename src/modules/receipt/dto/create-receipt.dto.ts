@@ -1,16 +1,18 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
-  IsDateString,
+  IsDate,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
+import { parseToDate } from 'src/common/utils/format-date.util';
 
 export class CreateReceiptDto {
-  @IsDateString()
+  @IsDate()
   @IsNotEmpty()
-  date: string;
+  @Transform(({ value }) => parseToDate(value), { toClassOnly: true })
+  date: Date;
 
   @IsNumber()
   @IsNotEmpty()

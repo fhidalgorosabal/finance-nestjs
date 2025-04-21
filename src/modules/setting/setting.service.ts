@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConceptType, Setting } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateSettingDto } from './dto/create-setting.dto';
 import { ChangeMonthDto } from './dto/change-month.dto';
 import { DataResponse, responseData, responseError } from 'src/common/utils/response.util';

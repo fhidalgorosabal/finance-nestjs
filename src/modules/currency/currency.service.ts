@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { Currency, Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
 import { ListCurrenciesDto } from './dto/list-currencies.dto';
@@ -131,15 +131,4 @@ export class CurrencyService {
       throw responseError(error, 'No se pudo actualizar la moneda predeterminada.');
     }
   }
-  
-
-  private buildCurrencyData(dto: UpdateCurrencyDto): Prisma.CurrencyUpdateInput {
-    const { companyId, ...fields } = dto;
-    return {
-      ...fields,
-      ...(companyId ? { company: { connect: { id: companyId } } } : {}),
-    };
-  }
-  
-  
 }
