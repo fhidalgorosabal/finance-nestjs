@@ -1,98 +1,109 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# FinanceNestJS (NestJS)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+**FinanceNestJS** es una API RESTful desarrollada con **NestJS** que proporciona servicios backend para integrarse con la aplicación frontend (**FinanceApp**). Esta versión ha sido diseñada desde cero utilizando **TypeScript** y el framework **NestJS**, manteniendo la lógica y estructura funcional de la versión original desarrollada en **Laravel 9**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Requisitos previos
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
-## Project setup
+- [Node.js](https://nodejs.org/) >= 18
+- [npm](https://www.npmjs.com/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Nest CLI](https://docs.nestjs.com/cli/overview)  
+  `npm install -g @nestjs/cli`
 
-```bash
-$ npm install
-```
+---
 
-## Compile and run the project
+## Instalación y configuración
 
-```bash
-# development
-$ npm run start
+1. Clona este repositorio:  
+   `git clone https://github.com/fhidalgorosabal/backend-finance-app-nestjs.git`
 
-# watch mode
-$ npm run start:dev
+2. Accede a la carpeta del proyecto:  
+   `cd backend-finance-app-nestjs`
 
-# production mode
-$ npm run start:prod
-```
+3. Copia el archivo `.env.example` a `.env` y configura las variables de entorno.
 
-## Run tests
+4. Instala las dependencias del proyecto: `npm install`
 
-```bash
-# unit tests
-$ npm run test
+5. Configura la base de datos: `npx prisma migrate dev --name init && npx prisma generate`
 
-# e2e tests
-$ npm run test:e2e
+6. Ejecuta la aplicación: `npm run start:dev` (desarrollo) o `npm run build && npm run start:prod` (producción)
 
-# test coverage
-$ npm run test:cov
-```
+---
 
-## Deployment
+## Endpoints principales
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### Autenticación
+- **POST** `/register`: Registrar un nuevo usuario.
+- **POST** `/login`: Iniciar sesión.
+- **GET** `/profile`: Obtener la información del usuario autenticado.
+- **POST** `/refresh`: Actualizar el token de autenticación.
+- **POST** `/logout`: Cerrar sesión.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Gestión de conceptos
+- **GET** `/concept`: Listar todos los conceptos.
+- **POST** `/concept`: Crear un nuevo concepto.
+- **GET** `/concept/{id}`: Obtener los detalles de un concepto específico.
+- **PUT** `/concept/{id}`: Actualizar un concepto existente.
+- **DELETE** `/concept/{id}`: Eliminar un concepto.
+- **POST** `/concept/list`: Obtener una lista filtrada de conceptos.
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+### Gestión de monedas
+- **GET** `/currency`: Listar todas las monedas.
+- **POST** `/currency`: Crear una nueva moneda.
+- **GET** `/currency/{id}`: Obtener los detalles de una moneda específica.
+- **PUT** `/currency/{id}`: Actualizar una moneda existente.
+- **DELETE** `/currency/{id}`: Eliminar una moneda.
+- **POST** `/currency/list`: Obtener una lista filtrada de monedas.
+- **GET** `/currency/default-currency/{company_id}`: Obtener la moneda por defecto para una empresa específica.
+- **POST** `/currency/default-currency`: Establecer una moneda como predeterminada.
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Gestión de recibos
+- **GET** `/receipt`: Listar todos los recibos.
+- **POST** `/receipt`: Crear un nuevo recibo.
+- **GET** `/receipt/{id}`: Obtener los detalles de un recibo específico.
+- **PUT** `/receipt/{id}`: Actualizar un recibo existente.
+- **DELETE** `/receipt/{id}`: Eliminar un recibo.
+- **POST** `/receipt/list`: Obtener una lista filtrada de recibos.
 
-## Resources
+### Gestión de cuentas
+- **GET** `/account`: Listar todas las cuentas.
+- **POST** `/account`: Crear una nueva cuenta.
+- **GET** `/account/{id}`: Obtener los detalles de una cuenta específica.
+- **PUT** `/account/{id}`: Actualizar una cuenta existente.
+- **DELETE** `/account/{id}`: Eliminar una cuenta.
+- **POST** `/account/list`: Obtener una lista filtrada de cuentas.
 
-Check out a few resources that may come in handy when working with NestJS:
+### Gestión de bancos
+- **GET** `/bank`: Listar todos los bancos.
+- **POST** `/bank`: Crear un nuevo banco.
+- **GET** `/bank/{id}`: Obtener los detalles de un banco específico.
+- **PUT** `/bank/{id}`: Actualizar un banco existente.
+- **DELETE** `/bank/{id}`: Eliminar un banco.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Configuración
+- **POST** `/setting`: Obtener la configuración actual.
+- **POST** `/setting/change-month`: Cambiar el mes activo en el sistema.
+- **POST** `/setting/close-year`: Cerrar el año financiero.
 
-## Support
+### Tablero de control (Dashboard)
+- **POST** `/dashboard/get-month-total`: Obtener el total de ingresos y gastos del mes actual.
+- **POST** `/dashboard/get-month-concepts`: Obtener los conceptos asociados al mes actual.
+- **POST** `/dashboard/get-ingress-expenses-month`: Obtener ingresos y gastos por mes.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
-## Stay in touch
+## Autor
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Desarrollado por: Fernando Hidalgo Rosabal.
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Licencia
+
+Este proyecto está licenciado bajo la [Licencia MIT](https://opensource.org/licenses/MIT).
+
+---
