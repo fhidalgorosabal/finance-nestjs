@@ -7,6 +7,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Main');
 
+  app.enableCors({
+    origin: ['http://localhost:4200', 'https://finance-app-fhr.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  });
+
   app.setGlobalPrefix(env.apiPrefix);
 
   app.useGlobalPipes(
