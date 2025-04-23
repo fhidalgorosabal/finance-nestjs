@@ -5,7 +5,6 @@ import { Type } from "class-transformer";
 export class ListConceptsDto {
     @IsIn([ConceptType.Expense, ConceptType.Ingress])
     @IsNotEmpty()
-    @Type(() => Number)
     type: ConceptType;
 
     @IsInt()
