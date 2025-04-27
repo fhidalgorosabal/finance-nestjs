@@ -47,7 +47,6 @@ export class CurrencyService {
       const currencies = await this.prisma.currency.findMany({
         where: {
           companyId: listCurrenciesDto.companyId,
-          active: true,
         },
       });
       return responseData(currencies, 'Listado de las monedas');

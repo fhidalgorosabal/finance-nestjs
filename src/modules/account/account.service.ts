@@ -42,7 +42,6 @@ export class AccountService {
       const accounts = await this.prisma.account.findMany({
         where: {
           companyId: listAccountsDto.companyId,
-          active: true,
         },
       });
       return responseData(accounts, 'Listado de las cuentas');
