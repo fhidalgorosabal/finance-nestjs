@@ -52,12 +52,7 @@ export class AccountService {
 
   async findOne(id: number) {
     try {
-      const account = await this.prisma.account.findUniqueOrThrow({ 
-        where: { 
-          id,
-          active: true,
-        } 
-      });
+      const account = await this.prisma.account.findUniqueOrThrow({where: { id }});
       return responseData(account, `Detalles de la cuenta ${id}.`);
     } catch (error) {
       throw responseError(error, `No se pudo obtener la cuenta ${id}.`, HttpStatus.NOT_FOUND);

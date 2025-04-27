@@ -57,12 +57,7 @@ export class CurrencyService {
 
   async findOne(id: number): Promise<DataResponse<Currency>> {
     try {
-      const currency = await this.prisma.currency.findUniqueOrThrow({ 
-        where: { 
-          id,
-          active: true,
-        } 
-      });
+      const currency = await this.prisma.currency.findUniqueOrThrow({where: { id }});
       return responseData(currency, `Detalles de la moneda: ${id}.`);
     } catch (error) {
       throw responseError(error, `No se pudo obtener la moneda: ${id}.`, HttpStatus.NOT_FOUND);
