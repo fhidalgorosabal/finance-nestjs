@@ -37,9 +37,9 @@ export class DashboardService {
       const result = await this.prisma.$queryRawUnsafe<MonthConcept[]>(`
         SELECT 
           c.id, 
-          c.description as concept_description, 
+          c.description as conceptDescription, 
           c.type,
-          SUM(r.actual_amount) as total_amount
+          SUM(r.actual_amount) as totalAmount
         FROM concept c
         JOIN receipt r ON c.id = r.concept_id
         WHERE c.type = '${type}'
@@ -65,12 +65,12 @@ export class DashboardService {
       const months: number[] = Array.from({ length: Number(setting.currentMonth) }, (_, i) => i + 1);
       const result = await this.prisma.$queryRawUnsafe<{
         type: ConceptType;
-        total_amount: number;
+        totalAmount: number;
         month: number;
       }[]>(`
         SELECT 
           CASE WHEN c.type = 'Ingress' THEN 'Ingress' ELSE 'Expense' END as type,
-          SUM(r.actual_amount) as total_amount,
+          SUM(r.actual_amount) as totalAmount,
           EXTRACT(MONTH FROM r.date) as month
         FROM concept c
         LEFT JOIN receipt r ON c.id = r.concept_id
@@ -84,10 +84,10 @@ export class DashboardService {
         if (index === -1) {
           acc.push({
             type: row.type,
-            values: { [row.month]: Number(row.total_amount) },
+            values: { [row.month]: Number(row.totalAmount) },
           });
         } else {
-          acc[index].values[row.month] = Number(row.total_amount);
+          acc[index].values[row.month] = Number(row.totalAmount);
         }
         return acc;
       }, []);
