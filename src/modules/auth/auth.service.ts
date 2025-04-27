@@ -154,9 +154,9 @@ export class AuthService {
 
   private generateToken(payload: Payload): TokenResponse {
     return {
-      access_token: this.jwtService.sign(payload),
-      token_type: 'bearer',
-      expires_in: env.expiresIn,
+      accessToken: this.jwtService.sign(payload),
+      tokenType: 'bearer',
+      expiresIn: env.expiresIn,
     };
   }
 
