@@ -37,9 +37,9 @@ export class DashboardService {
       const result = await this.prisma.$queryRawUnsafe<MonthConcept[]>(`
         SELECT 
           c.id, 
-          c.description as conceptDescription, 
+          c.description as "conceptDescription", 
           c.type,
-          SUM(r.actual_amount) as totalAmount
+          SUM(r.actual_amount) as "totalAmount"
         FROM concept c
         JOIN receipt r ON c.id = r.concept_id
         WHERE c.type = '${type}'
@@ -70,7 +70,7 @@ export class DashboardService {
       }[]>(`
         SELECT 
           CASE WHEN c.type = 'Ingress' THEN 'Ingress' ELSE 'Expense' END as type,
-          SUM(r.actual_amount) as totalAmount,
+          SUM(r.actual_amount) as "totalAmount",
           EXTRACT(MONTH FROM r.date) as month
         FROM concept c
         LEFT JOIN receipt r ON c.id = r.concept_id
